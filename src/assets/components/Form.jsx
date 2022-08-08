@@ -1,35 +1,56 @@
 import React from "react";
-import data from "./data"
+import data from "./data";
 export default function Form() {
+	const [meme, setMeme] = React.useState({
+		topText: "",
+		bottomText: "",
+		image: "http://i.imgflip.com/1bij.jpg",
+	});
+	const [allImages, setAllMemeImages] = React.useState(data.data.memes);
+	const [memeText, setMemeText] = React.useState({
+		topText: "",
+		bottomText: "",
+	});
 
-    const [memeImage, setMemeImage] = React.useState({
-        "topText": "",
-        "bottomText": "",
-        "image": "http://i.imgflip.com/1bij.jpg",
-    });
-    const [allImages, setAllImages] = React.useState(data.data.memes);
-    function randomImage(){
-        let randomIndex = Math.floor(Math.random() * allImages.length)
+	function randomImage() {
+		let randomIndex = Math.floor(Math.random() * allImages.length);
 
-        let randomImage = allImages[randomIndex].url
-        setMemeImage((prevMemeImage) =>{
+		let randomImage = allImages[randomIndex].url;
+		setMeme((prevMeme) => {
+			return {
+				...prevMeme,
+				image: randomImage,
+			};
+		});
+	}
+
+    function handleChange(event){
+        const {name, value} = event.target;
+        setMemeText((prevMemeText) => {
             return {
-                ...prevMemeImage,
-                "image": randomImage
+                ...prevMemeText,
+                [name]: value,
             }
-        });
-    } 
+        })
+    }
 	return (
-		<section className="meme-form">
-			<div className="meme-cont">
-				<div className="inputs">
-					<input type="text" placeholder="Enter top text" />
-					<input type="text" placeholder="Enter Bottom text" />
+		<>
+			{" "}
+			<section className="meme-form">
+				<div className="meme-cont">
+					<div className="inputs">
+						<input onChange={ handleChange } value={ memeText.topText } name="topText" type="text" placeholder="Enter top text" />
+						<input onChange={ handleChange } value={ memeText.bottomText } name="bottomText" type="text" placeholder="Enter Bottom text"
+						/>
+					</div>
+					<button onClick={randomImage}>Generate a new meme image</button>
 				</div>
-				<button onClick={ randomImage }>Generate a new meme image</button>
-
-                <img src={ memeImage.image } />
+			</section>
+			<div className="meme">
+				<img src={meme.image} className="meme--image" />
+				<h2 className="meme--text top">{ memeText.topText }</h2>
+				<h2 className="meme--text bottom">{ memeText.bottomText }</h2>
 			</div>
-		</section>
+		</>
 	);
 }
